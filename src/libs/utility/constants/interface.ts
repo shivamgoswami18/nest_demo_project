@@ -13,7 +13,7 @@ export interface ErrorResponse {
 export interface ApiResponse<T> {
   statusCode: number;
   status: string;
-  message: string;
-  data: T;
+  message?: string;
+  data?: T;
   error?: unknown;
 }

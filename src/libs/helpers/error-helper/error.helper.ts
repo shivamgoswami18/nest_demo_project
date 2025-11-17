@@ -5,8 +5,8 @@ import { ApiResponse } from 'src/libs/utility/constants/interface';
 export function HandleResponse<T = unknown>(
   statusCode: number,
   status: string,
-  message: string,
-  data: T,
+  message?: string,
+  data?: T,
   error?: unknown,
 ): ApiResponse<T> | never {
   if (status === ResponseData.SUCCESS) {
