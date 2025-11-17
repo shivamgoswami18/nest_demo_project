@@ -1,12 +1,10 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import * as dotenv from 'dotenv';
-
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-
-dotenv.config();
 
 const mongoUri = process.env.MONGO_URI ?? '';
 
