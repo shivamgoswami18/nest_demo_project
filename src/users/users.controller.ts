@@ -13,6 +13,7 @@ import { RegistrationDto } from './dto/registration.dto';
 import { UsersService } from './users.service';
 import { ApiTag } from 'src/libs/utility/constants/enums';
 import { UpdateProfileDto } from './dto/updateProfile.dto';
+import { UserPaginationDto } from './dto/userPagination.dto';
 
 @ApiTags(ApiTag.USERS)
 @Controller('users')
@@ -57,5 +58,15 @@ export class UsersController {
   @Delete('deleteUser/:id')
   async deleteUser(@Param('id') id: string) {
     return await this.usersService.deleteUser(id);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'List of Users',
+    description: 'This API allows to view all users with pagination.',
+  })
+  @Post('listOfUsers')
+  async listOfUsers(@Body() dto: UserPaginationDto) {
+    return await this.usersService.listOfUsers(dto);
   }
 }

@@ -8,6 +8,7 @@ import { User, UserDocument } from 'src/model/user.schema';
 import { RegistrationDto } from './dto/registration.dto';
 import { Messages } from 'src/libs/utility/constants/message';
 import { UpdateProfileDto } from './dto/updateProfile.dto';
+import { UserPaginationDto } from './dto/userPagination.dto';
 
 @Injectable()
 export class UsersService {
@@ -136,5 +137,86 @@ export class UsersService {
       ResponseData.SUCCESS,
       `User ${Messages.IS_DELETED_SUCCESSFULLY}`,
     );
+  }
+
+  async listOfUsers(dto: UserPaginationDto) {
+    const { page = 1, limit = 10, sortKey, sortOrder, search } = dto;
+
+    const pipeline: any[] = [];
+
+    if (search) {
+      pipeline.push({
+        $match: {
+          $or: [
+            { name: { $regex: search, $options: 'i' } },
+            { email: { $regex: search, $options: 'i' } },
+            { phone: { $regex: search, $options: 'i' } },
+          ],
+        },
+      });
+    }
+
+    if (sortKey) {
+      pipeline.push({
+        $sort: {
+          [sortKey]: sortOrder === 'asc' ? 1 : -1,
+        },
+      });
+    } else {
+      pipeline.push({
+        $sort: {
+          createdAt: -1,
+        },
+      });
+    }
+
+    const countPipeline = [...pipeline];
+
+    if (page && limit) {
+      const skipCount = (Number(page) - 1) * Number(limit);
+      pipeline.push({ $skip: skipCount }, { $limit: Number(limit) });
+    }
+
+    pipeline.push({
+      $project: {
+        _id: 1,
+        name: 1,
+        email: 1,
+        phone: 1,
+        age: 1,
+        createdAt: 1,
+        updatedAt: 1,
+      },
+    });
+
+    const [users, totalCountResult] = await Promise.all([
+      this.userModel.aggregate(pipeline),
+      this.userModel.aggregate<{ total: number }>([
+        ...countPipeline,
+        { $count: 'total' },
+      ]),
+    ]);
+
+    const totalItems: number =
+      (totalCountResult as { total: number }[])[0]?.total ?? 0;
+
+    if (users.length === 0) {
+      Logger.error(`Users ${Messages.IS_NOT_FOUND}`);
+      return HandleResponse(
+        HttpStatus.NOT_FOUND,
+        ResponseData.ERROR,
+        `Users ${Messages.IS_NOT_FOUND}`,
+      );
+    }
+
+    Logger.log(`Users ${Messages.IS_FETCHED_SUCCESSFULLY}`);
+    return HandleResponse(HttpStatus.OK, ResponseData.SUCCESS, undefined, {
+      users,
+      totalCount: totalItems,
+      itemsCount: users.length,
+      currentPage: page ? Number(page) : null,
+      totalPage: Math.ceil(totalItems / Number(limit)),
+      pageSize: limit ? Number(limit) : 1,
+    });
   }
 }
