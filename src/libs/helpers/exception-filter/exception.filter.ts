@@ -4,57 +4,57 @@ import {
   ExceptionFilter,
   HttpException,
   HttpStatus,
-  Logger,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
-import {
-  CustomError,
-  ErrorResponse,
-} from 'src/libs/utility/constants/interface';
 import { ResponseData } from 'src/libs/utility/constants/response';
+import { Response } from 'express';
+
+interface ErrorResponse {
+  message?: string | string[];
+  trace?: any;
+  data?: any;
+  statusCode?: number;
+}
 
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {
   constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
   catch(exception: unknown, host: ArgumentsHost): void {
+    const { httpAdapter } = this.httpAdapterHost;
+
     const ctx = host.switchToHttp();
-    ctx.getRequest();
+    const response = ctx.getResponse<Response>();
 
-    let httpStatus =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
+    console.error('Exception Caught:', exception);
 
-    let exMessage: string | string[] = 'Internal server error';
-    let exResponse: ErrorResponse;
-
-    if (typeof exception === 'object' && exception !== null) {
-      const ex = exception as CustomError;
-
-      httpStatus = ex.statusCode ? ex.statusCode : httpStatus;
-      exMessage = ex.message;
-    }
+    let httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+    let exMessage = 'Internal Server Error';
 
     if (exception instanceof HttpException) {
-      exResponse = exception.getResponse() as ErrorResponse;
+      const res = exception.getResponse() as ErrorResponse;
 
-      if (exResponse?.trace && exResponse.trace.length > 0) {
-        const trace = exResponse.trace;
-        Logger.error(`Exception: ${JSON.stringify(trace)}`);
-      }
+      httpStatus = res.statusCode ?? exception.getStatus();
 
-      if (exResponse?.message && exResponse.message.length > 0) {
-        exMessage = exResponse.message;
+      if (res.message) {
+        exMessage = Array.isArray(res.message)
+          ? res.message.join(', ')
+          : res.message;
       }
+    } else if (typeof exception === 'object' && exception !== null) {
+      const err = exception as ErrorResponse;
 
-      if (exResponse?.data) {
-        const data = exResponse.data;
-        Logger.error(`Exception: ${JSON.stringify(data)}`);
+      if (err.statusCode) httpStatus = err.statusCode;
+
+      if (err.message) {
+        exMessage = Array.isArray(err.message)
+          ? err.message.join(', ')
+          : err.message;
       }
-    } else {
-      const e = exception;
-      Logger.error(`Exception: ${JSON.stringify(e)}`);
+    }
+
+    if (!exMessage) {
+      exMessage = 'Unexpected Error Occurred';
     }
 
     const responseBody = {
@@ -63,7 +63,6 @@ export class AllExceptionFilter implements ExceptionFilter {
       message: exMessage,
     };
 
-    const httpAdapter = this.httpAdapterHost.httpAdapter;
-    httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
+    httpAdapter.reply(response, responseBody, httpStatus);
   }
 }

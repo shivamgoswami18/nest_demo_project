@@ -1,6 +1,13 @@
 import { HttpStatus, HttpException } from '@nestjs/common';
 import { ResponseData } from 'src/libs/utility/constants/response';
-import { ApiResponse } from 'src/libs/utility/constants/interface';
+
+export interface ApiResponse<T> {
+  statusCode: number;
+  status: string;
+  message?: string;
+  data?: T;
+  error?: unknown;
+}
 
 export function HandleResponse<T = unknown>(
   statusCode: number,
