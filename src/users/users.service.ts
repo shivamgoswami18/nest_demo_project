@@ -7,6 +7,7 @@ import { ResponseData } from 'src/libs/utility/constants/response';
 import { User, UserDocument } from 'src/model/user.schema';
 import { RegistrationDto } from './dto/registration.dto';
 import { Messages } from 'src/libs/utility/constants/message';
+import { UpdateProfileDto } from './dto/updateProfile.dto';
 
 @Injectable()
 export class UsersService {
@@ -36,14 +37,15 @@ export class UsersService {
       ...userDetails,
     });
 
+    const { password: _, ...responseUser } = user.toObject();
+
     Logger.log(`User ${Messages.IS_CREATED_SUCCESSFULLY}`);
     return HandleResponse(
       HttpStatus.CREATED,
       ResponseData.SUCCESS,
       `User ${Messages.IS_CREATED_SUCCESSFULLY}`,
       {
-        email,
-        ...userDetails,
+        ...responseUser,
       },
     );
   }
@@ -68,6 +70,71 @@ export class UsersService {
       {
         user,
       },
+    );
+  }
+
+  async updateProfile(id: string, dto: UpdateProfileDto) {
+    if (dto.email) {
+      const emailExists = await this.userModel.findOne({
+        email: dto.email,
+        _id: { $ne: id },
+      });
+      if (emailExists) {
+        Logger.error(`Email ${Messages.IS_ALREADY_EXIST}`);
+        return HandleResponse(
+          HttpStatus.CONFLICT,
+          ResponseData.ERROR,
+          `Email ${Messages.IS_ALREADY_EXIST}`,
+        );
+      }
+    }
+
+    if (dto.password) {
+      dto.password = await bcrypt.hash(dto.password, 10);
+    }
+
+    const user = await this.userModel.findByIdAndUpdate(id, dto, {
+      new: true,
+      select: '-password',
+    });
+
+    if (!user) {
+      Logger.error(`User ${Messages.IS_NOT_FOUND}`);
+      return HandleResponse(
+        HttpStatus.NOT_FOUND,
+        ResponseData.ERROR,
+        `User ${Messages.IS_NOT_FOUND}`,
+      );
+    }
+
+    Logger.log(`User ${Messages.IS_UPDATED_SUCCESSFULLY}`);
+    return HandleResponse(
+      HttpStatus.OK,
+      ResponseData.SUCCESS,
+      `User ${Messages.IS_UPDATED_SUCCESSFULLY}`,
+      {
+        user,
+      },
+    );
+  }
+
+  async deleteUser(id: string) {
+    const user = await this.userModel.findByIdAndDelete(id).select('-password');
+
+    if (!user) {
+      Logger.error(`User ${Messages.IS_NOT_FOUND}`);
+      return HandleResponse(
+        HttpStatus.NOT_FOUND,
+        ResponseData.ERROR,
+        `User ${Messages.IS_NOT_FOUND}`,
+      );
+    }
+
+    Logger.log(`User ${Messages.IS_DELETED_SUCCESSFULLY}`);
+    return HandleResponse(
+      HttpStatus.OK,
+      ResponseData.SUCCESS,
+      `User ${Messages.IS_DELETED_SUCCESSFULLY}`,
     );
   }
 }

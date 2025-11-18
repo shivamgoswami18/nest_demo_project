@@ -6,4 +6,6 @@ export enum Messages {
   IS_CREATED_SUCCESSFULLY = 'created successfully.',
   IS_NOT_FOUND = 'not found.',
   IS_FETCHED_SUCCESSFULLY = 'fetched successfully.',
+  IS_UPDATED_SUCCESSFULLY = 'updated successfully.',
+  IS_DELETED_SUCCESSFULLY = 'deleted successfully.',
 }

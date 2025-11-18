@@ -6,11 +6,13 @@ import {
   Post,
   Get,
   Param,
+  Delete,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RegistrationDto } from './dto/registration.dto';
 import { UsersService } from './users.service';
 import { ApiTag } from 'src/libs/utility/constants/enums';
+import { UpdateProfileDto } from './dto/updateProfile.dto';
 
 @ApiTags(ApiTag.USERS)
 @Controller('users')
@@ -35,5 +37,25 @@ export class UsersController {
   @Get('viewProfile/:id')
   async viewProfile(@Param('id') id: string) {
     return await this.usersService.viewProfile(id);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Update User Profile',
+    description: 'Update user profile details by user ID.',
+  })
+  @Post('updateProfile/:id')
+  async updateProfile(@Param('id') id: string, @Body() dto: UpdateProfileDto) {
+    return await this.usersService.updateProfile(id, dto);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Delete User',
+    description: 'Delete user by ID.',
+  })
+  @Delete('deleteUser/:id')
+  async deleteUser(@Param('id') id: string) {
+    return await this.usersService.deleteUser(id);
   }
 }
