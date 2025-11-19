@@ -8,6 +8,7 @@ export enum Messages {
   IS_FETCHED_SUCCESSFULLY = 'fetched successfully.',
   IS_UPDATED_SUCCESSFULLY = 'updated successfully.',
   IS_DELETED_SUCCESSFULLY = 'deleted successfully.',
+  FILE_UPLOADED_SUCCESSFULLY = 'File uploaded successfully.',
 
   // Auth Messages
   INVALID_CREDENTIALS = 'Invalid credentials.',
