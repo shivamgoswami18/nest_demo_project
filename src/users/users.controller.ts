@@ -14,6 +14,7 @@ import { UsersService } from './users.service';
 import { ApiTag } from 'src/libs/utility/constants/enums';
 import { UpdateProfileDto } from './dto/updateProfile.dto';
 import { UserPaginationDto } from './dto/userPagination.dto';
+import { LoginDto } from './dto/login.dto';
 
 @ApiTags(ApiTag.USERS)
 @Controller('users')
@@ -68,5 +69,15 @@ export class UsersController {
   @Post('listOfUsers')
   async listOfUsers(@Body() dto: UserPaginationDto) {
     return await this.usersService.listOfUsers(dto);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'User Login',
+    description: 'This API allows user to login using email and password.',
+  })
+  @Post('login')
+  async login(@Body() dto: LoginDto) {
+    return await this.usersService.login(dto);
   }
 }

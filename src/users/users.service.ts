@@ -9,12 +9,15 @@ import { RegistrationDto } from './dto/registration.dto';
 import { Messages } from 'src/libs/utility/constants/message';
 import { UpdateProfileDto } from './dto/updateProfile.dto';
 import { UserPaginationDto } from './dto/userPagination.dto';
+import { LoginDto } from './dto/login.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name)
     private readonly userModel: Model<UserDocument>,
+    private readonly jwtService: JwtService,
   ) {}
 
   async registration(dto: RegistrationDto) {
@@ -218,5 +221,47 @@ export class UsersService {
       totalPage: Math.ceil(totalItems / Number(limit)),
       pageSize: limit ? Number(limit) : 1,
     });
+  }
+
+  async login(dto: LoginDto) {
+    const { email, password } = dto;
+
+    const user = await this.userModel.findOne({ email });
+
+    if (!user) {
+      Logger.error(`User ${Messages.IS_NOT_FOUND}`);
+      return HandleResponse(
+        HttpStatus.NOT_FOUND,
+        ResponseData.ERROR,
+        `User ${Messages.IS_NOT_FOUND}`,
+      );
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      Logger.error(Messages.INVALID_CREDENTIALS);
+      return HandleResponse(
+        HttpStatus.UNAUTHORIZED,
+        ResponseData.ERROR,
+        Messages.INVALID_CREDENTIALS,
+      );
+    }
+
+    const payload = {
+      id: user._id,
+      email: user.email,
+    };
+
+    const token = await this.jwtService.signAsync(payload);
+
+    Logger.log(Messages.LOGIN_SUCCESSFULLY);
+
+    return HandleResponse(
+      HttpStatus.OK,
+      ResponseData.SUCCESS,
+      Messages.LOGIN_SUCCESSFULLY,
+      token,
+    );
   }
 }
