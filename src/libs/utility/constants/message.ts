@@ -13,4 +13,9 @@ export enum Messages {
   // Auth Messages
   INVALID_CREDENTIALS = 'Invalid credentials.',
   LOGIN_SUCCESSFULLY = 'Logged in successfully.',
+
+  // Role Messages
+  USER_ROLE_NOT_FOUND = 'User role not found.',
+  INSUFFICIENT_PERMISSIONS = 'Insufficient permissions. Admin access required.',
+  ACCESS_DENIED_ADMIN_REQUIRED = 'Access denied. Admin role required.',
 }

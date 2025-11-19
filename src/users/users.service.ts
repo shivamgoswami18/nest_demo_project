@@ -11,6 +11,7 @@ import { UpdateProfileDto } from './dto/updateProfile.dto';
 import { UserPaginationDto } from './dto/userPagination.dto';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
+import { UserRole } from 'src/libs/utility/constants/enums';
 
 @Injectable()
 export class UsersService {
@@ -38,6 +39,7 @@ export class UsersService {
     const user = await this.userModel.create({
       email,
       password: hashPassword,
+      role: dto.role,
       ...userDetails,
     });
 
@@ -54,7 +56,16 @@ export class UsersService {
     );
   }
 
-  async viewProfile(id: string) {
+  async viewProfile(id: string, currentUserRole?: string) {
+    if (currentUserRole !== UserRole.ADMIN) {
+      Logger.error(Messages.ACCESS_DENIED_ADMIN_REQUIRED);
+      return HandleResponse(
+        HttpStatus.FORBIDDEN,
+        ResponseData.ERROR,
+        Messages.ACCESS_DENIED_ADMIN_REQUIRED,
+      );
+    }
+
     const user = await this.userModel.findById(id).select('-password');
 
     if (!user) {
@@ -187,6 +198,7 @@ export class UsersService {
         email: 1,
         phone: 1,
         age: 1,
+        role: 1,
         createdAt: 1,
         updatedAt: 1,
       },
@@ -251,6 +263,7 @@ export class UsersService {
     const payload = {
       id: user._id,
       email: user.email,
+      role: user.role,
     };
 
     const token = await this.jwtService.signAsync(payload);

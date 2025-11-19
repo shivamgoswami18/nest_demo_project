@@ -5,7 +5,9 @@ import {
   IsEmail,
   IsNumber,
   Matches,
+  IsEnum,
 } from 'class-validator';
+import { UserRole } from 'src/libs/utility/constants/enums';
 
 export class RegistrationDto {
   @ApiProperty({
@@ -61,4 +63,14 @@ export class RegistrationDto {
   @IsNumber()
   @IsNotEmpty()
   age: number;
+
+  @ApiProperty({
+    example: UserRole.USER,
+    type: 'string',
+    enum: UserRole,
+    required: true,
+  })
+  @IsEnum(UserRole)
+  @IsNotEmpty()
+  role: UserRole;
 }

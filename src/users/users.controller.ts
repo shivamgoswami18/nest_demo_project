@@ -8,6 +8,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { RegistrationDto } from './dto/registration.dto';
@@ -17,6 +18,9 @@ import { UpdateProfileDto } from './dto/updateProfile.dto';
 import { UserPaginationDto } from './dto/userPagination.dto';
 import { LoginDto } from './dto/login.dto';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/guards/roles.guard';
+import { Roles } from 'src/decorators/roles.decorator';
+import { UserRole } from 'src/libs/utility/constants/enums';
 
 @ApiTags(ApiTag.USERS)
 @Controller('users')
@@ -36,13 +40,14 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'View User Profile',
-    description: 'Fetch user profile details by user ID.',
+    description: 'Fetch user profile details by user ID. Admin access only.',
   })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
   @ApiBearerAuth()
   @Get('viewProfile/:id')
-  async viewProfile(@Param('id') id: string) {
-    return await this.usersService.viewProfile(id);
+  async viewProfile(@Param('id') id: string, @Request() req: any) {
+    return await this.usersService.viewProfile(id, req.user?.role);
   }
 
   @HttpCode(HttpStatus.OK)
