@@ -7,14 +7,16 @@ import {
   Get,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { RegistrationDto } from './dto/registration.dto';
 import { UsersService } from './users.service';
 import { ApiTag } from 'src/libs/utility/constants/enums';
 import { UpdateProfileDto } from './dto/updateProfile.dto';
 import { UserPaginationDto } from './dto/userPagination.dto';
 import { LoginDto } from './dto/login.dto';
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 
 @ApiTags(ApiTag.USERS)
 @Controller('users')
@@ -36,6 +38,8 @@ export class UsersController {
     summary: 'View User Profile',
     description: 'Fetch user profile details by user ID.',
   })
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Get('viewProfile/:id')
   async viewProfile(@Param('id') id: string) {
     return await this.usersService.viewProfile(id);
