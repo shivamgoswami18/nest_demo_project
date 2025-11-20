@@ -56,17 +56,10 @@ export class UsersService {
     );
   }
 
-  async viewProfile(id: string, currentUserRole?: string) {
-    if (currentUserRole !== UserRole.ADMIN) {
-      Logger.error(Messages.ACCESS_DENIED_ADMIN_REQUIRED);
-      return HandleResponse(
-        HttpStatus.FORBIDDEN,
-        ResponseData.ERROR,
-        Messages.ACCESS_DENIED_ADMIN_REQUIRED,
-      );
-    }
-
-    const user = await this.userModel.findById(id).select('-password');
+  async viewProfile(req: any) {
+    const user = await this.userModel
+      .findById(req.user.userId)
+      .select('-password');
 
     if (!user) {
       Logger.error(`User ${Messages.IS_NOT_FOUND}`);
@@ -225,14 +218,19 @@ export class UsersService {
     }
 
     Logger.log(`Users ${Messages.IS_FETCHED_SUCCESSFULLY}`);
-    return HandleResponse(HttpStatus.OK, ResponseData.SUCCESS, undefined, {
-      users,
-      totalCount: totalItems,
-      itemsCount: users.length,
-      currentPage: page ? Number(page) : null,
-      totalPage: Math.ceil(totalItems / Number(limit)),
-      pageSize: limit ? Number(limit) : 1,
-    });
+    return HandleResponse(
+      HttpStatus.OK,
+      ResponseData.SUCCESS,
+      `Users ${Messages.IS_FETCHED_SUCCESSFULLY}`,
+      {
+        users,
+        totalCount: totalItems,
+        itemsCount: users.length,
+        currentPage: page ? Number(page) : null,
+        totalPage: Math.ceil(totalItems / Number(limit)),
+        pageSize: limit ? Number(limit) : 1,
+      },
+    );
   }
 
   async login(dto: LoginDto) {

@@ -9,19 +9,22 @@ import {
   Delete,
   UseGuards,
   Request,
+  Patch,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { RegistrationDto } from './dto/registration.dto';
 import { UsersService } from './users.service';
-import { ApiTag, UserRole } from 'src/libs/utility/constants/enums';
+import { ApiTag } from 'src/libs/utility/constants/enums';
 import { UpdateProfileDto } from './dto/updateProfile.dto';
 import { UserPaginationDto } from './dto/userPagination.dto';
 import { LoginDto } from './dto/login.dto';
 import { JwtAuthGuard } from 'src/libs/service/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/libs/service/auth/roles.guard';
-import { Roles } from 'src/libs/helpers/decorators/roles.decorator';
+import { Public } from 'src/libs/helpers/decorators/public.decorator';
 
 @ApiTags(ApiTag.USERS)
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -32,6 +35,7 @@ export class UsersController {
     description: 'This API allows a new user to register.',
   })
   @Post('registration')
+  @Public()
   async registration(@Body() dto: RegistrationDto) {
     return await this.usersService.registration(dto);
   }
@@ -41,12 +45,9 @@ export class UsersController {
     summary: 'View User Profile',
     description: 'Fetch user profile details by user ID. Admin access only.',
   })
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.ADMIN)
-  @ApiBearerAuth()
-  @Get('viewProfile/:id')
-  async viewProfile(@Param('id') id: string, @Request() req: any) {
-    return await this.usersService.viewProfile(id, req.user?.role);
+  @Get('viewProfile')
+  async viewProfile(@Request() req: any) {
+    return await this.usersService.viewProfile(req);
   }
 
   @HttpCode(HttpStatus.OK)
@@ -54,7 +55,7 @@ export class UsersController {
     summary: 'Update User Profile',
     description: 'Update user profile details by user ID.',
   })
-  @Post('updateProfile/:id')
+  @Patch('updateProfile/:id')
   async updateProfile(@Param('id') id: string, @Body() dto: UpdateProfileDto) {
     return await this.usersService.updateProfile(id, dto);
   }
@@ -85,6 +86,7 @@ export class UsersController {
     description: 'This API allows user to login using email and password.',
   })
   @Post('login')
+  @Public()
   async login(@Body() dto: LoginDto) {
     return await this.usersService.login(dto);
   }
