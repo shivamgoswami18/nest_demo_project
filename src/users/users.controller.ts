@@ -13,14 +13,13 @@ import {
 import { ApiOperation, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { RegistrationDto } from './dto/registration.dto';
 import { UsersService } from './users.service';
-import { ApiTag } from 'src/libs/utility/constants/enums';
+import { ApiTag, UserRole } from 'src/libs/utility/constants/enums';
 import { UpdateProfileDto } from './dto/updateProfile.dto';
 import { UserPaginationDto } from './dto/userPagination.dto';
 import { LoginDto } from './dto/login.dto';
-import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
-import { RolesGuard } from 'src/guards/roles.guard';
-import { Roles } from 'src/decorators/roles.decorator';
-import { UserRole } from 'src/libs/utility/constants/enums';
+import { JwtAuthGuard } from 'src/libs/service/auth/jwt-auth.guard';
+import { RolesGuard } from 'src/libs/service/auth/roles.guard';
+import { Roles } from 'src/libs/helpers/decorators/roles.decorator';
 
 @ApiTags(ApiTag.USERS)
 @Controller('users')
