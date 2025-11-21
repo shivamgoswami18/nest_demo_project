@@ -101,6 +101,17 @@ class UpdateProductExpertiseDto {
   expertise_description: string;
 }
 
+class UpdateProductMethodologyDto {
+  @ApiProperty({
+    example: 'Assess current environmental impact and sustainability goals.',
+    type: 'string',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  methodology_description: string;
+}
+
 export class UpdateProductDto {
   @ApiProperty({
     example: 'laptop',
@@ -169,4 +180,13 @@ export class UpdateProductDto {
   @Type(() => UpdateProductExpertiseDto)
   @IsOptional()
   product_expertise?: UpdateProductExpertiseDto[];
+
+  @ApiProperty({
+    type: [UpdateProductMethodologyDto],
+    required: false,
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => UpdateProductMethodologyDto)
+  product_methodology: UpdateProductMethodologyDto[];
 }

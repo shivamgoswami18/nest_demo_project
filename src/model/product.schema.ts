@@ -101,14 +101,28 @@ export class Product {
         },
         expertise_description: {
           type: String,
-          required: true
-        }
+          required: true,
+        },
       },
     ],
   })
   product_expertise: {
     expertise_area: string;
     expertise_description: string;
+  }[];
+
+  @Prop({
+    type: [
+      {
+        methodology_description: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+  })
+  product_methodology: {
+    methodology_description: string;
   }[];
 }
 
