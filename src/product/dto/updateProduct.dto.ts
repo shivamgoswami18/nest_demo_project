@@ -10,7 +10,7 @@ class UpdateProductBenefitDto {
   })
   @IsString()
   @IsOptional()
-  benefit?: string;
+  product_benefit?: string;
 }
 
 class UpdateProductImageDto {
@@ -21,7 +21,7 @@ class UpdateProductImageDto {
   })
   @IsString()
   @IsOptional()
-  overview_image: string;
+  overview_image?: string;
 
   @ApiProperty({
     example: 'image_2',
@@ -30,7 +30,7 @@ class UpdateProductImageDto {
   })
   @IsString()
   @IsOptional()
-  service_image: string;
+  service_image?: string;
 
   @ApiProperty({
     example: 'image_3',
@@ -39,7 +39,7 @@ class UpdateProductImageDto {
   })
   @IsString()
   @IsOptional()
-  right_sidebar_image_1: string;
+  right_sidebar_image_1?: string;
 
   @ApiProperty({
     example: 'image_4',
@@ -48,7 +48,37 @@ class UpdateProductImageDto {
   })
   @IsString()
   @IsOptional()
-  right_sidebar_image_2: string;
+  right_sidebar_image_2?: string;
+}
+
+class UpdateProductServiceDetailDto {
+  @ApiProperty({
+    example: 'Track carbon emissions',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  product_service_detail?: string;
+}
+
+class UpdateProductServiceDto {
+  @ApiProperty({
+    example: 'Record Your Impact',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  product_service_type?: string;
+
+  @ApiProperty({
+    type: [UpdateProductServiceDetailDto],
+    required: false,
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => UpdateProductServiceDetailDto)
+  @IsOptional()
+  product_service_details?: UpdateProductServiceDetailDto[];
 }
 
 export class UpdateProductDto {
@@ -73,15 +103,15 @@ export class UpdateProductDto {
   @ApiProperty({
     type: [UpdateProductBenefitDto],
     example: [
-      { benefit: 'Improves productivity' },
-      { benefit: 'Learn new things' },
+      { product_benefit: 'Improves productivity' },
+      { product_benefit: 'Learn new things' },
     ],
     required: false,
   })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => UpdateProductBenefitDto)
-  product_benefits: UpdateProductBenefitDto[];
+  product_benefits?: UpdateProductBenefitDto[];
 
   @ApiProperty({
     type: [UpdateProductImageDto],
@@ -98,5 +128,15 @@ export class UpdateProductDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => UpdateProductImageDto)
-  productImages: UpdateProductImageDto[];
+  product_images?: UpdateProductImageDto[];
+
+  @ApiProperty({
+    type: [UpdateProductServiceDto],
+    required: false,
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => UpdateProductServiceDto)
+  @IsOptional()
+  product_services?: UpdateProductServiceDto[];
 }

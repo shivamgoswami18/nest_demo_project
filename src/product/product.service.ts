@@ -17,7 +17,7 @@ export class ProductService {
   ) {}
 
   async createProduct(dto: CreateProductDto) {
-    const newProduct = await this.productModel.create(dto);
+    const product = await this.productModel.create(dto);
 
     Logger.log(`Product ${Messages.IS_CREATED_SUCCESSFULLY}`);
     return HandleResponse(
@@ -25,7 +25,7 @@ export class ProductService {
       ResponseData.SUCCESS,
       `Product ${Messages.IS_CREATED_SUCCESSFULLY}`,
       {
-        newProduct,
+        product,
       },
     );
   }

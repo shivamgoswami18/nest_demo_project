@@ -10,7 +10,7 @@ class ProductBenefitDto {
   })
   @IsString()
   @IsNotEmpty()
-  benefit: string;
+  product_benefit: string;
 }
 
 class ProductImageDto {
@@ -51,6 +51,36 @@ class ProductImageDto {
   right_sidebar_image_2: string;
 }
 
+class ProductServiceDetailDto {
+  @ApiProperty({
+    example: 'Track carbon emissions',
+    type: 'string',
+    required: true,
+  })
+  @IsString()
+  @IsNotEmpty()
+  product_service_detail: string;
+}
+
+class ProductServiceDto {
+  @ApiProperty({
+    example: 'Record Your Impact',
+    type: 'string',
+    required: true,
+  })
+  @IsString()
+  @IsNotEmpty()
+  product_service_type: string;
+
+  @ApiProperty({
+    type: [ProductServiceDetailDto],
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ProductServiceDetailDto)
+  product_service_details: ProductServiceDetailDto[];
+}
+
 export class CreateProductDto {
   @ApiProperty({
     example: 'laptop',
@@ -72,10 +102,7 @@ export class CreateProductDto {
 
   @ApiProperty({
     type: [ProductBenefitDto],
-    example: [
-      { benefit: 'Improves productivity' },
-      { benefit: 'Learn new things' },
-    ],
+    example: [{ product_benefit: 'Improves productivity' }],
     required: true,
   })
   @IsArray()
@@ -98,5 +125,13 @@ export class CreateProductDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ProductImageDto)
-  productImages: ProductImageDto[];
+  product_images: ProductImageDto[];
+
+  @ApiProperty({
+    type: [ProductServiceDto],
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ProductServiceDto)
+  product_services: ProductServiceDto[];
 }
