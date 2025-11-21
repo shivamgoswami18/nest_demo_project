@@ -81,6 +81,26 @@ class UpdateProductServiceDto {
   product_service_details?: UpdateProductServiceDetailDto[];
 }
 
+class UpdateProductExpertiseDto {
+  @ApiProperty({
+    example: 'Environmental Data Tracking',
+    type: 'string',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  expertise_area: string;
+
+  @ApiProperty({
+    example: 'Track emissions, energy usage',
+    type: 'string',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  expertise_description: string;
+}
+
 export class UpdateProductDto {
   @ApiProperty({
     example: 'laptop',
@@ -139,4 +159,14 @@ export class UpdateProductDto {
   @Type(() => UpdateProductServiceDto)
   @IsOptional()
   product_services?: UpdateProductServiceDto[];
+
+  @ApiProperty({
+    type: [UpdateProductExpertiseDto],
+    required: false,
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => UpdateProductExpertiseDto)
+  @IsOptional()
+  product_expertise?: UpdateProductExpertiseDto[];
 }

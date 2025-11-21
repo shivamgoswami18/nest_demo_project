@@ -11,7 +11,7 @@ import { UpdateProfileDto } from './dto/updateProfile.dto';
 import { UserPaginationDto } from './dto/userPagination.dto';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
-import { UserRole } from 'src/libs/utility/constants/enums';
+import { ChangePasswordDto } from './dto/changePassword.dto';
 
 @Injectable()
 export class UsersService {
@@ -273,6 +273,45 @@ export class UsersService {
       ResponseData.SUCCESS,
       Messages.LOGIN_SUCCESSFULLY,
       token,
+    );
+  }
+
+  async changePassword(req: any, dto: ChangePasswordDto) {
+    const { old_password, new_password } = dto;
+    const user = await this.userModel.findById(req.user.userId);
+
+    if (!user) {
+      Logger.error(`User ${Messages.IS_NOT_FOUND}`);
+      return HandleResponse(
+        HttpStatus.NOT_FOUND,
+        ResponseData.ERROR,
+        `User ${Messages.IS_NOT_FOUND}`,
+      );
+    }
+
+    const isMatch = await bcrypt.compare(old_password, user.password);
+    if (!isMatch) {
+      return HandleResponse(
+        HttpStatus.BAD_REQUEST,
+        ResponseData.ERROR,
+        `Old password ${Messages.IS_INCORRECT}`,
+      );
+    }
+
+    const hashedPassword = await bcrypt.hash(new_password, 10);
+
+    await this.userModel.findByIdAndUpdate(
+      req.user.userId,
+      {
+        password: hashedPassword,
+      },
+      { new: true },
+    );
+
+    return HandleResponse(
+      HttpStatus.OK,
+      ResponseData.SUCCESS,
+      `Password ${Messages.IS_CHANGED_SUCCESSFULLY}`,
     );
   }
 }

@@ -13,6 +13,8 @@ export enum Messages {
   // Auth Messages
   INVALID_CREDENTIALS = 'Invalid credentials.',
   LOGIN_SUCCESSFULLY = 'Logged in successfully.',
+  IS_INCORRECT = 'is incorrect.',
+  IS_CHANGED_SUCCESSFULLY = 'changed successfully.',
 
   // Role Messages
   USER_ROLE_NOT_FOUND = 'User role not found.',

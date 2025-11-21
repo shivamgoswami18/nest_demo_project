@@ -21,6 +21,7 @@ import { LoginDto } from './dto/login.dto';
 import { JwtAuthGuard } from 'src/libs/service/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/libs/service/auth/roles.guard';
 import { Public } from 'src/libs/helpers/decorators/public.decorator';
+import { ChangePasswordDto } from './dto/changePassword.dto';
 
 @ApiTags(ApiTag.USERS)
 @ApiBearerAuth()
@@ -89,5 +90,15 @@ export class UsersController {
   @Public()
   async login(@Body() dto: LoginDto) {
     return await this.usersService.login(dto);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Change Password',
+    description: 'Change your password',
+  })
+  @Post('changePassword')
+  async changePassword(@Request() req: any, @Body() dto: ChangePasswordDto) {
+    return await this.usersService.changePassword(req, dto);
   }
 }

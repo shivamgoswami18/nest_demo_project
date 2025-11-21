@@ -91,6 +91,25 @@ export class Product {
 
   @Prop({ type: [ProductServiceSchema] })
   product_services: ProductService[];
+
+  @Prop({
+    type: [
+      {
+        expertise_area: {
+          type: String,
+          required: true,
+        },
+        expertise_description: {
+          type: String,
+          required: true
+        }
+      },
+    ],
+  })
+  product_expertise: {
+    expertise_area: string;
+    expertise_description: string;
+  }[];
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

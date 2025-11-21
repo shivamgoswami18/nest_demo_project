@@ -81,6 +81,26 @@ class ProductServiceDto {
   product_service_details: ProductServiceDetailDto[];
 }
 
+class ProductExpertiseDto {
+  @ApiProperty({
+    example: 'Environmental Data Tracking',
+    type: 'string',
+    required: true,
+  })
+  @IsString()
+  @IsNotEmpty()
+  expertise_area: string;
+
+  @ApiProperty({
+    example: 'Track emissions, energy usage',
+    type: 'string',
+    required: true,
+  })
+  @IsString()
+  @IsNotEmpty()
+  expertise_description: string;
+}
+
 export class CreateProductDto {
   @ApiProperty({
     example: 'laptop',
@@ -102,7 +122,6 @@ export class CreateProductDto {
 
   @ApiProperty({
     type: [ProductBenefitDto],
-    example: [{ product_benefit: 'Improves productivity' }],
     required: true,
   })
   @IsArray()
@@ -134,4 +153,13 @@ export class CreateProductDto {
   @ValidateNested({ each: true })
   @Type(() => ProductServiceDto)
   product_services: ProductServiceDto[];
+
+  @ApiProperty({
+    type: [ProductExpertiseDto],
+    required: true,
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ProductExpertiseDto)
+  product_expertise: ProductExpertiseDto[];
 }
