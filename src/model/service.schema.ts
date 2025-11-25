@@ -20,9 +20,9 @@ export class Service {
   @Prop({
     type: Boolean,
     default: false,
-    required: true
+    required: true,
   })
-  is_deleted: boolean
+  is_deleted: boolean;
 
   @Prop({
     type: [
@@ -51,6 +51,86 @@ export class Service {
     service_image: string;
     right_sidebar_image_1: string;
     right_sidebar_image_2: string;
+  }[];
+
+  @Prop({
+    type: [
+      {
+        sub_service_title: {
+          type: String,
+          required: true,
+        },
+        sub_service_description: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+  })
+  sub_service: {
+    sub_service_title: string;
+    sub_service_description: string;
+  }[];
+
+  @Prop({
+    type: [
+      {
+        services_details_point: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+  })
+  approaches: {
+    services_details_point: string;
+  }[];
+
+  @Prop({
+    type: [
+      {
+        services_details_point: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+  })
+  benefits: {
+    services_details_point: string;
+  }[];
+
+  @Prop({
+    type: [
+      {
+        services_details_point: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+  })
+  atc: {
+    services_details_point: string;
+  }[];
+
+  @Prop({
+    type: [
+      {
+        services_details_point: {
+          type: String,
+          required: true,
+        },
+        services_details_description: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+  })
+  consulting: {
+    services_details_point: string;
+    services_details_description: string;
   }[];
 }
 

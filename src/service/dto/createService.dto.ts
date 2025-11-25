@@ -46,6 +46,80 @@ class ServiceImageDto {
   right_sidebar_image_2: string;
 }
 
+class SubServiceDto {
+  @ApiProperty({
+    example: 'Custom Website Development',
+    type: 'string',
+    required: true,
+  })
+  @IsString()
+  @IsNotEmpty()
+  sub_service_title: string;
+
+  @ApiProperty({
+    example:
+      'We specialize in creating custom websites that are aligned with your business goals',
+    type: 'string',
+    required: true,
+  })
+  @IsString()
+  @IsNotEmpty()
+  sub_service_description: string;
+}
+
+class ServiceApproachDto {
+  @ApiProperty({
+    example: 'We start every project',
+    type: 'string',
+    required: true,
+  })
+  @IsString()
+  @IsNotEmpty()
+  services_details_point: string;
+}
+
+class ServiceBenefitDto {
+  @ApiProperty({
+    example: 'A website or application',
+    type: 'string',
+    required: true,
+  })
+  @IsString()
+  @IsNotEmpty()
+  services_details_point: string;
+}
+
+class ServiceAtcDto {
+  @ApiProperty({
+    example: 'At the heart of our web development services',
+    type: 'string',
+    required: true,
+  })
+  @IsString()
+  @IsNotEmpty()
+  services_details_point: string;
+}
+
+class ServiceConsultingDto {
+  @ApiProperty({
+    example: 'software-development',
+    type: 'string',
+    required: true,
+  })
+  @IsString()
+  @IsNotEmpty()
+  services_details_point: string;
+
+  @ApiProperty({
+    example: 'Innovate, Build, and Grow. Cuentista Tech offers',
+    type: 'string',
+    required: true,
+  })
+  @IsString()
+  @IsNotEmpty()
+  services_details_description: string;
+}
+
 export class CreateServiceDto {
   @ApiProperty({
     example: 'Web Development',
@@ -66,15 +140,6 @@ export class CreateServiceDto {
   service_description: string;
 
   @ApiProperty({
-    example: false,
-    type: 'boolean',
-    required: true,
-  })
-  @IsBoolean()
-  @IsNotEmpty()
-  is_deleted: boolean;
-
-  @ApiProperty({
     type: [ServiceImageDto],
     required: true,
   })
@@ -82,4 +147,49 @@ export class CreateServiceDto {
   @ValidateNested({ each: true })
   @Type(() => ServiceImageDto)
   service_images: ServiceImageDto[];
+
+  @ApiProperty({
+    type: [SubServiceDto],
+    required: true,
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => SubServiceDto)
+  sub_service: SubServiceDto[];
+
+  @ApiProperty({
+    type: [ServiceApproachDto],
+    required: true,
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ServiceApproachDto)
+  approaches: ServiceApproachDto[];
+
+  @ApiProperty({
+    type: [ServiceBenefitDto],
+    required: true,
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ServiceBenefitDto)
+  benefits: ServiceBenefitDto[];
+
+  @ApiProperty({
+    type: [ServiceAtcDto],
+    required: true,
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ServiceAtcDto)
+  atc: ServiceAtcDto[];
+
+  @ApiProperty({
+    type: [ServiceConsultingDto],
+    required: true,
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ServiceConsultingDto)
+  consulting: ServiceConsultingDto[];
 }
