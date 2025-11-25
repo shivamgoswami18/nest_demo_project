@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { UploadModule } from './upload/upload.module';
 import { ProductModule } from './product/product.module';
+import { ServiceModule } from './service/service.module';
 
 const mongoUri = process.env.MONGO_URI ?? '';
 
@@ -21,6 +22,7 @@ const mongoUri = process.env.MONGO_URI ?? '';
     UsersModule,
     UploadModule,
     ProductModule,
+    ServiceModule,
   ],
   controllers: [AppController],
   providers: [AppService],

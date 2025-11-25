@@ -2,6 +2,7 @@ export enum ApiTag {
   USERS = 'Users',
   UPLOAD = 'Upload',
   PRODUCT = 'Product',
+  SERVICE = 'Service',
 }
 
 export enum UserRole {
