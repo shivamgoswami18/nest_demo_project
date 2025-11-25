@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { createFileUploadInterceptor } from 'src/libs/helpers/multer';
-import { FileUploadDto } from 'src/libs/dto/upload.dto';
+import { FileUploadDto } from 'src/libs/helpers/upload.dto';
 import { ApiTag } from 'src/libs/utility/constants/enums';
 import { UploadService } from './upload.service';
 

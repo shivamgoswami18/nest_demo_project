@@ -26,33 +26,27 @@ export class UsersService {
     const findUser = await this.userModel.findOne({ email });
 
     if (findUser) {
-      Logger.error(`User ${Messages.IS_ALREADY_EXIST}`);
+      Logger.error(`User ${Messages.ALREADY_EXIST}`);
       return HandleResponse(
         HttpStatus.CONFLICT,
         ResponseData.ERROR,
-        `User ${Messages.IS_ALREADY_EXIST}`,
+        `User ${Messages.ALREADY_EXIST}`,
       );
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
 
-    const user = await this.userModel.create({
+    await this.userModel.create({
       email,
       password: hashPassword,
-      role: dto.role,
       ...userDetails,
     });
 
-    const { password: _, ...responseUser } = user.toObject();
-
-    Logger.log(`User ${Messages.IS_CREATED_SUCCESSFULLY}`);
+    Logger.log(`User ${Messages.CREATED_SUCCESSFULLY}`);
     return HandleResponse(
       HttpStatus.CREATED,
       ResponseData.SUCCESS,
-      `User ${Messages.IS_CREATED_SUCCESSFULLY}`,
-      {
-        ...responseUser,
-      },
+      `User ${Messages.CREATED_SUCCESSFULLY}`,
     );
   }
 
@@ -62,87 +56,67 @@ export class UsersService {
       .select('-password');
 
     if (!user) {
-      Logger.error(`User ${Messages.IS_NOT_FOUND}`);
+      Logger.error(`User ${Messages.NOT_FOUND}`);
       return HandleResponse(
         HttpStatus.NOT_FOUND,
         ResponseData.ERROR,
-        `User ${Messages.IS_NOT_FOUND}`,
+        `User ${Messages.NOT_FOUND}`,
       );
     }
 
-    Logger.log(`User ${Messages.IS_FETCHED_SUCCESSFULLY}`);
+    Logger.log(`User ${Messages.FETCHED_SUCCESSFULLY}`);
     return HandleResponse(
       HttpStatus.OK,
       ResponseData.SUCCESS,
-      `User ${Messages.IS_FETCHED_SUCCESSFULLY}`,
+      `User ${Messages.FETCHED_SUCCESSFULLY}`,
       {
         user,
       },
     );
   }
 
-  async updateProfile(id: string, dto: UpdateProfileDto) {
-    if (dto.email) {
-      const emailExists = await this.userModel.findOne({
-        email: dto.email,
-        _id: { $ne: id },
-      });
-      if (emailExists) {
-        Logger.error(`Email ${Messages.IS_ALREADY_EXIST}`);
-        return HandleResponse(
-          HttpStatus.CONFLICT,
-          ResponseData.ERROR,
-          `Email ${Messages.IS_ALREADY_EXIST}`,
-        );
-      }
-    }
-
-    if (dto.password) {
-      dto.password = await bcrypt.hash(dto.password, 10);
-    }
-
-    const user = await this.userModel.findByIdAndUpdate(id, dto, {
+  async updateProfile(req: any, dto: UpdateProfileDto) {
+    const user = await this.userModel.findByIdAndUpdate(req.user.userId, dto, {
       new: true,
       select: '-password',
     });
 
     if (!user) {
-      Logger.error(`User ${Messages.IS_NOT_FOUND}`);
+      Logger.error(`User ${Messages.NOT_FOUND}`);
       return HandleResponse(
         HttpStatus.NOT_FOUND,
         ResponseData.ERROR,
-        `User ${Messages.IS_NOT_FOUND}`,
+        `User ${Messages.NOT_FOUND}`,
       );
     }
 
-    Logger.log(`User ${Messages.IS_UPDATED_SUCCESSFULLY}`);
+    Logger.log(`User ${Messages.UPDATED_SUCCESSFULLY}`);
     return HandleResponse(
-      HttpStatus.OK,
+      HttpStatus.ACCEPTED,
       ResponseData.SUCCESS,
-      `User ${Messages.IS_UPDATED_SUCCESSFULLY}`,
-      {
-        user,
-      },
+      `User ${Messages.UPDATED_SUCCESSFULLY}`,
     );
   }
 
-  async deleteUser(id: string) {
-    const user = await this.userModel.findByIdAndDelete(id).select('-password');
+  async deleteUser(req: any) {
+    const user = await this.userModel
+      .findByIdAndDelete(req.user.userId)
+      .select('-password');
 
     if (!user) {
-      Logger.error(`User ${Messages.IS_NOT_FOUND}`);
+      Logger.error(`User ${Messages.NOT_FOUND}`);
       return HandleResponse(
         HttpStatus.NOT_FOUND,
         ResponseData.ERROR,
-        `User ${Messages.IS_NOT_FOUND}`,
+        `User ${Messages.NOT_FOUND}`,
       );
     }
 
-    Logger.log(`User ${Messages.IS_DELETED_SUCCESSFULLY}`);
+    Logger.log(`User ${Messages.DELETED_SUCCESSFULLY}`);
     return HandleResponse(
       HttpStatus.OK,
       ResponseData.SUCCESS,
-      `User ${Messages.IS_DELETED_SUCCESSFULLY}`,
+      `User ${Messages.DELETED_SUCCESSFULLY}`,
     );
   }
 
@@ -209,19 +183,19 @@ export class UsersService {
       (totalCountResult as { total: number }[])[0]?.total ?? 0;
 
     if (users.length === 0) {
-      Logger.error(`Users ${Messages.IS_NOT_FOUND}`);
+      Logger.error(`Users ${Messages.NOT_FOUND}`);
       return HandleResponse(
         HttpStatus.NOT_FOUND,
         ResponseData.ERROR,
-        `Users ${Messages.IS_NOT_FOUND}`,
+        `Users ${Messages.NOT_FOUND}`,
       );
     }
 
-    Logger.log(`Users ${Messages.IS_FETCHED_SUCCESSFULLY}`);
+    Logger.log(`Users ${Messages.FETCHED_SUCCESSFULLY}`);
     return HandleResponse(
       HttpStatus.OK,
       ResponseData.SUCCESS,
-      `Users ${Messages.IS_FETCHED_SUCCESSFULLY}`,
+      `Users ${Messages.FETCHED_SUCCESSFULLY}`,
       {
         users,
         totalCount: totalItems,
@@ -239,11 +213,11 @@ export class UsersService {
     const user = await this.userModel.findOne({ email });
 
     if (!user) {
-      Logger.error(`User ${Messages.IS_NOT_FOUND}`);
+      Logger.error(`User ${Messages.NOT_FOUND}`);
       return HandleResponse(
         HttpStatus.NOT_FOUND,
         ResponseData.ERROR,
-        `User ${Messages.IS_NOT_FOUND}`,
+        `User ${Messages.NOT_FOUND}`,
       );
     }
 
@@ -281,11 +255,11 @@ export class UsersService {
     const user = await this.userModel.findById(req.user.userId);
 
     if (!user) {
-      Logger.error(`User ${Messages.IS_NOT_FOUND}`);
+      Logger.error(`User ${Messages.NOT_FOUND}`);
       return HandleResponse(
         HttpStatus.NOT_FOUND,
         ResponseData.ERROR,
-        `User ${Messages.IS_NOT_FOUND}`,
+        `User ${Messages.NOT_FOUND}`,
       );
     }
 
@@ -294,7 +268,7 @@ export class UsersService {
       return HandleResponse(
         HttpStatus.BAD_REQUEST,
         ResponseData.ERROR,
-        `Old password ${Messages.IS_INCORRECT}`,
+        `Old password ${Messages.INCORRECT}`,
       );
     }
 
@@ -311,7 +285,7 @@ export class UsersService {
     return HandleResponse(
       HttpStatus.OK,
       ResponseData.SUCCESS,
-      `Password ${Messages.IS_CHANGED_SUCCESSFULLY}`,
+      `Password ${Messages.CHANGED_SUCCESSFULLY}`,
     );
   }
 }

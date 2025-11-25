@@ -9,7 +9,6 @@ export class User {
   @Prop({
     type: String,
     required: true,
-    maxlength: 255,
   })
   name: string;
 
@@ -18,14 +17,12 @@ export class User {
     required: true,
     unique: true,
     trim: true,
-    maxlength: 255,
   })
   email: string;
 
   @Prop({
     type: String,
     required: true,
-    minlength: 6,
   })
   password: string;
 
@@ -38,8 +35,6 @@ export class User {
   @Prop({
     type: Number,
     required: true,
-    min: 1,
-    max: 150,
   })
   age: number;
 

@@ -1,10 +1,6 @@
 import { diskStorage } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
-
-export interface MulterConfig {
-  destination?: string;
-  fieldName?: string;
-}
+import { MulterConfig } from '../utility/constants/interface';
 
 export const createFileUploadInterceptor = (config: MulterConfig = {}) => {
   const { destination, fieldName } = config;

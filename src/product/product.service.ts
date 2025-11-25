@@ -17,16 +17,13 @@ export class ProductService {
   ) {}
 
   async createProduct(dto: CreateProductDto) {
-    const product = await this.productModel.create(dto);
+    await this.productModel.create(dto);
 
-    Logger.log(`Product ${Messages.IS_CREATED_SUCCESSFULLY}`);
+    Logger.log(`Product ${Messages.CREATED_SUCCESSFULLY}`);
     return HandleResponse(
       HttpStatus.CREATED,
       ResponseData.SUCCESS,
-      `Product ${Messages.IS_CREATED_SUCCESSFULLY}`,
-      {
-        product,
-      },
+      `Product ${Messages.CREATED_SUCCESSFULLY}`,
     );
   }
 
@@ -37,15 +34,15 @@ export class ProductService {
       return HandleResponse(
         HttpStatus.NOT_FOUND,
         ResponseData.ERROR,
-        `Product ${Messages.IS_NOT_FOUND}`,
+        `Product ${Messages.NOT_FOUND}`,
       );
     }
 
-    Logger.log(`Product ${Messages.IS_FETCHED_SUCCESSFULLY}`);
+    Logger.log(`Product ${Messages.FETCHED_SUCCESSFULLY}`);
     return HandleResponse(
-      HttpStatus.CREATED,
+      HttpStatus.OK,
       ResponseData.SUCCESS,
-      `Product ${Messages.IS_FETCHED_SUCCESSFULLY}`,
+      `Product ${Messages.FETCHED_SUCCESSFULLY}`,
       {
         product,
       },
@@ -61,16 +58,15 @@ export class ProductService {
       return HandleResponse(
         HttpStatus.NOT_FOUND,
         ResponseData.ERROR,
-        `Product ${Messages.IS_NOT_FOUND}`,
+        `Product ${Messages.NOT_FOUND}`,
       );
     }
 
-    Logger.log(`Product ${Messages.IS_UPDATED_SUCCESSFULLY}`);
+    Logger.log(`Product ${Messages.UPDATED_SUCCESSFULLY}`);
     return HandleResponse(
-      HttpStatus.OK,
+      HttpStatus.ACCEPTED,
       ResponseData.SUCCESS,
-      `Product ${Messages.IS_UPDATED_SUCCESSFULLY}`,
-      { updatedProduct },
+      `Product ${Messages.UPDATED_SUCCESSFULLY}`,
     );
   }
 
@@ -81,15 +77,15 @@ export class ProductService {
       return HandleResponse(
         HttpStatus.NOT_FOUND,
         ResponseData.ERROR,
-        `Product ${Messages.IS_NOT_FOUND}`,
+        `Product ${Messages.NOT_FOUND}`,
       );
     }
 
-    Logger.log(`Product ${Messages.IS_DELETED_SUCCESSFULLY}`);
+    Logger.log(`Product ${Messages.DELETED_SUCCESSFULLY}`);
     return HandleResponse(
       HttpStatus.OK,
       ResponseData.SUCCESS,
-      `Product ${Messages.IS_DELETED_SUCCESSFULLY}`,
+      `Product ${Messages.DELETED_SUCCESSFULLY}`,
     );
   }
 
@@ -146,19 +142,19 @@ export class ProductService {
       (totalCountResult as { total: number }[])[0]?.total ?? 0;
 
     if (products.length === 0) {
-      Logger.error(`Products ${Messages.IS_NOT_FOUND}`);
+      Logger.error(`Products ${Messages.NOT_FOUND}`);
       return HandleResponse(
         HttpStatus.NOT_FOUND,
         ResponseData.ERROR,
-        `Products ${Messages.IS_NOT_FOUND}`,
+        `Products ${Messages.NOT_FOUND}`,
       );
     }
 
-    Logger.log(`Products ${Messages.IS_FETCHED_SUCCESSFULLY}`);
+    Logger.log(`Products ${Messages.FETCHED_SUCCESSFULLY}`);
     return HandleResponse(
       HttpStatus.OK,
       ResponseData.SUCCESS,
-      `Products ${Messages.IS_FETCHED_SUCCESSFULLY}`,
+      `Products ${Messages.FETCHED_SUCCESSFULLY}`,
       {
         products,
         totalCount: totalItems,
