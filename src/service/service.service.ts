@@ -19,11 +19,11 @@ export class ServiceService {
   async createService(dto: CreateServiceDto) {
     await this.serviceModel.create(dto);
 
-    Logger.log(`Service ${Messages.IS_CREATED_SUCCESSFULLY}`);
+    Logger.log(`Service ${Messages.CREATED_SUCCESSFULLY}`);
     return HandleResponse(
       HttpStatus.CREATED,
       ResponseData.SUCCESS,
-      `Service ${Messages.IS_CREATED_SUCCESSFULLY}`,
+      `Service ${Messages.CREATED_SUCCESSFULLY}`,
     );
   }
 
@@ -34,15 +34,15 @@ export class ServiceService {
       return HandleResponse(
         HttpStatus.NOT_FOUND,
         ResponseData.SUCCESS,
-        `Service ${Messages.IS_NOT_FOUND}`,
+        `Service ${Messages.NOT_FOUND}`,
       );
     }
 
-    Logger.log(`Service ${Messages.IS_FETCHED_SUCCESSFULLY}`);
+    Logger.log(`Service ${Messages.FETCHED_SUCCESSFULLY}`);
     return HandleResponse(
       HttpStatus.OK,
       ResponseData.SUCCESS,
-      `Service ${Messages.IS_FETCHED_SUCCESSFULLY}`,
+      `Service ${Messages.FETCHED_SUCCESSFULLY}`,
       { service },
     );
   }
@@ -56,15 +56,15 @@ export class ServiceService {
       return HandleResponse(
         HttpStatus.NOT_FOUND,
         ResponseData.ERROR,
-        `Service ${Messages.IS_NOT_FOUND}`,
+        `Service ${Messages.NOT_FOUND}`,
       );
     }
 
-    Logger.log(`Service ${Messages.IS_UPDATED_SUCCESSFULLY}`);
+    Logger.log(`Service ${Messages.UPDATED_SUCCESSFULLY}`);
     return HandleResponse(
       HttpStatus.ACCEPTED,
       ResponseData.SUCCESS,
-      `Service ${Messages.IS_UPDATED_SUCCESSFULLY}`,
+      `Service ${Messages.UPDATED_SUCCESSFULLY}`,
       { id },
     );
   }
@@ -76,7 +76,7 @@ export class ServiceService {
       return HandleResponse(
         HttpStatus.NOT_FOUND,
         ResponseData.ERROR,
-        `Service ${Messages.IS_NOT_FOUND}`,
+        `Service ${Messages.NOT_FOUND}`,
       );
     }
 
@@ -84,7 +84,7 @@ export class ServiceService {
       return HandleResponse(
         HttpStatus.OK,
         ResponseData.SUCCESS,
-        `Service ${Messages.IS_ALREADY_DELETED}`,
+        `Service ${Messages.ALREADY_DELETED}`,
       );
     }
 
@@ -94,7 +94,7 @@ export class ServiceService {
     return HandleResponse(
       HttpStatus.OK,
       ResponseData.SUCCESS,
-      `Service ${Messages.IS_DELETED_SUCCESSFULLY}`,
+      `Service ${Messages.DELETED_SUCCESSFULLY}`,
     );
   }
 
@@ -157,19 +157,19 @@ export class ServiceService {
       (totalCountResult as { total: number }[])[0]?.total ?? 0;
 
     if (services.length === 0) {
-      Logger.error(`Services ${Messages.IS_NOT_FOUND}`);
+      Logger.error(`Services ${Messages.NOT_FOUND}`);
       return HandleResponse(
         HttpStatus.NOT_FOUND,
         ResponseData.ERROR,
-        `Services ${Messages.IS_NOT_FOUND}`,
+        `Services ${Messages.NOT_FOUND}`,
       );
     }
 
-    Logger.log(`Services ${Messages.IS_FETCHED_SUCCESSFULLY}`);
+    Logger.log(`Services ${Messages.FETCHED_SUCCESSFULLY}`);
     return HandleResponse(
       HttpStatus.OK,
       ResponseData.SUCCESS,
-      `Services ${Messages.IS_FETCHED_SUCCESSFULLY}`,
+      `Services ${Messages.FETCHED_SUCCESSFULLY}`,
       {
         services,
         totalCount: totalItems,
