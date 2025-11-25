@@ -1,12 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import {
-  IsArray,
-  IsBoolean,
-  IsOptional,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
+import { IsArray, IsOptional, IsString, ValidateNested } from 'class-validator';
 
 class ServiceImageDto {
   @ApiProperty({
@@ -16,7 +10,7 @@ class ServiceImageDto {
   })
   @IsString()
   @IsOptional()
-  overview_image: string;
+  overview_image?: string;
 
   @ApiProperty({
     example: 'image_2',
@@ -25,7 +19,7 @@ class ServiceImageDto {
   })
   @IsString()
   @IsOptional()
-  service_image: string;
+  service_image?: string;
 
   @ApiProperty({
     example: 'image_3',
@@ -34,7 +28,7 @@ class ServiceImageDto {
   })
   @IsString()
   @IsOptional()
-  right_sidebar_image_1: string;
+  right_sidebar_image_1?: string;
 
   @ApiProperty({
     example: 'image_4',
@@ -43,7 +37,7 @@ class ServiceImageDto {
   })
   @IsString()
   @IsOptional()
-  right_sidebar_image_2: string;
+  right_sidebar_image_2?: string;
 }
 
 class SubServiceDto {
@@ -54,7 +48,7 @@ class SubServiceDto {
   })
   @IsString()
   @IsOptional()
-  sub_service_title: string;
+  sub_service_title?: string;
 
   @ApiProperty({
     example:
@@ -64,7 +58,7 @@ class SubServiceDto {
   })
   @IsString()
   @IsOptional()
-  sub_service_description: string;
+  sub_service_description?: string;
 }
 
 class ServiceApproachDto {
@@ -75,7 +69,7 @@ class ServiceApproachDto {
   })
   @IsString()
   @IsOptional()
-  services_details_point: string;
+  services_details_point?: string;
 }
 
 class ServiceBenefitDto {
@@ -86,7 +80,7 @@ class ServiceBenefitDto {
   })
   @IsString()
   @IsOptional()
-  services_details_point: string;
+  services_details_point?: string;
 }
 
 class ServiceAtcDto {
@@ -97,7 +91,7 @@ class ServiceAtcDto {
   })
   @IsString()
   @IsOptional()
-  services_details_point: string;
+  services_details_point?: string;
 }
 
 class ServiceConsultingDto {
@@ -108,7 +102,7 @@ class ServiceConsultingDto {
   })
   @IsString()
   @IsOptional()
-  services_details_point: string;
+  services_details_point?: string;
 
   @ApiProperty({
     example: 'Innovate, Build, and Grow. Cuentista Tech offers',
@@ -117,7 +111,7 @@ class ServiceConsultingDto {
   })
   @IsString()
   @IsOptional()
-  services_details_description: string;
+  services_details_description?: string;
 }
 
 export class UpdateServiceDto {
@@ -128,7 +122,7 @@ export class UpdateServiceDto {
   })
   @IsString()
   @IsOptional()
-  service_name: string;
+  service_name?: string;
 
   @ApiProperty({
     example: 'Empowering Your Online Presence',
@@ -137,7 +131,7 @@ export class UpdateServiceDto {
   })
   @IsString()
   @IsOptional()
-  service_description: string;
+  service_description?: string;
 
   @ApiProperty({
     type: [ServiceImageDto],
@@ -146,7 +140,7 @@ export class UpdateServiceDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ServiceImageDto)
-  service_images: ServiceImageDto[];
+  service_images?: ServiceImageDto[];
 
   @ApiProperty({
     type: [SubServiceDto],
@@ -155,7 +149,7 @@ export class UpdateServiceDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => SubServiceDto)
-  sub_service: SubServiceDto[];
+  sub_service?: SubServiceDto[];
 
   @ApiProperty({
     type: [ServiceApproachDto],
@@ -164,7 +158,7 @@ export class UpdateServiceDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ServiceApproachDto)
-  approaches: ServiceApproachDto[];
+  approaches?: ServiceApproachDto[];
 
   @ApiProperty({
     type: [ServiceBenefitDto],
@@ -173,7 +167,7 @@ export class UpdateServiceDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ServiceBenefitDto)
-  benefits: ServiceBenefitDto[];
+  benefits?: ServiceBenefitDto[];
 
   @ApiProperty({
     type: [ServiceAtcDto],
@@ -182,7 +176,7 @@ export class UpdateServiceDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ServiceAtcDto)
-  atc: ServiceAtcDto[];
+  atc?: ServiceAtcDto[];
 
   @ApiProperty({
     type: [ServiceConsultingDto],
@@ -191,5 +185,5 @@ export class UpdateServiceDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ServiceConsultingDto)
-  consulting: ServiceConsultingDto[];
+  consulting?: ServiceConsultingDto[];
 }

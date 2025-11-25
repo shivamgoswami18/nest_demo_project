@@ -89,7 +89,7 @@ class UpdateProductExpertiseDto {
   })
   @IsString()
   @IsOptional()
-  expertise_area: string;
+  expertise_area?: string;
 
   @ApiProperty({
     example: 'Track emissions, energy usage',
@@ -98,7 +98,7 @@ class UpdateProductExpertiseDto {
   })
   @IsString()
   @IsOptional()
-  expertise_description: string;
+  expertise_description?: string;
 }
 
 class UpdateProductMethodologyDto {
@@ -109,7 +109,7 @@ class UpdateProductMethodologyDto {
   })
   @IsString()
   @IsOptional()
-  methodology_description: string;
+  methodology_description?: string;
 }
 
 export class UpdateProductDto {
@@ -146,14 +146,6 @@ export class UpdateProductDto {
 
   @ApiProperty({
     type: [UpdateProductImageDto],
-    example: [
-      {
-        overview_image: 'image_1',
-        service_image: 'image_2',
-        right_sidebar_image_1: 'image_3',
-        right_sidebar_image_2: 'image_4',
-      },
-    ],
     required: false,
   })
   @IsArray()
@@ -188,5 +180,5 @@ export class UpdateProductDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => UpdateProductMethodologyDto)
-  product_methodology: UpdateProductMethodologyDto[];
+  product_methodology?: UpdateProductMethodologyDto[];
 }
