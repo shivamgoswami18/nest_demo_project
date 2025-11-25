@@ -3,7 +3,7 @@ import { IsNotEmpty, IsString } from 'class-validator';
 
 export class ChangePasswordDto {
   @ApiProperty({
-    example: 'old password',
+    example: 'SecurePassword123!',
     type: 'string',
     required: true,
   })
@@ -12,7 +12,7 @@ export class ChangePasswordDto {
   old_password: string;
 
   @ApiProperty({
-    example: 'new password',
+    example: 'SecurePassword1234!',
     type: 'string',
     required: true,
   })

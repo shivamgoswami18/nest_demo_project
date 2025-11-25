@@ -1,5 +1,5 @@
 export enum ApiTag {
-  USERS = 'Users',
+  USER = 'User',
   UPLOAD = 'Upload',
   PRODUCT = 'Product',
   SERVICE = 'Service',

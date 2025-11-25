@@ -23,10 +23,10 @@ import { RolesGuard } from 'src/libs/service/auth/roles.guard';
 import { Public } from 'src/libs/helpers/decorators/public.decorator';
 import { ChangePasswordDto } from './dto/changePassword.dto';
 
-@ApiTags(ApiTag.USERS)
+@ApiTags(ApiTag.USER)
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Controller('users')
+@Controller('user')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -56,9 +56,9 @@ export class UsersController {
     summary: 'Update User Profile',
     description: 'Update user profile details by user ID.',
   })
-  @Patch('updateProfile/:id')
-  async updateProfile(@Param('id') id: string, @Body() dto: UpdateProfileDto) {
-    return await this.usersService.updateProfile(id, dto);
+  @Patch('updateProfile')
+  async updateProfile(@Request() req: any, @Body() dto: UpdateProfileDto) {
+    return await this.usersService.updateProfile(req, dto);
   }
 
   @HttpCode(HttpStatus.OK)
@@ -66,9 +66,9 @@ export class UsersController {
     summary: 'Delete User',
     description: 'Delete user by ID.',
   })
-  @Delete('deleteUser/:id')
-  async deleteUser(@Param('id') id: string) {
-    return await this.usersService.deleteUser(id);
+  @Delete('deleteUser')
+  async deleteUser(@Request() req: any) {
+    return await this.usersService.deleteUser(req);
   }
 
   @HttpCode(HttpStatus.OK)

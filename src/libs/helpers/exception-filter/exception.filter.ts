@@ -8,13 +8,7 @@ import {
 import { HttpAdapterHost } from '@nestjs/core';
 import { ResponseData } from 'src/libs/utility/constants/response';
 import { Response } from 'express';
-
-interface ErrorResponse {
-  message?: string | string[];
-  trace?: any;
-  data?: any;
-  statusCode?: number;
-}
+import { ErrorResponse } from 'src/libs/utility/constants/interface';
 
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {
