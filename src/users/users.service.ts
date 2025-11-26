@@ -14,14 +14,16 @@ import { JwtService } from '@nestjs/jwt';
 import { ChangePasswordDto } from './dto/changePassword.dto';
 import { VerifyEmailDto } from './dto/verifyEmail.dto';
 import { MailerService } from '@nestjs-modules/mailer';
-import { VerifyOtpDto } from './dto/VerifyOtp.dto';
 import { ResetPasswordDto } from './dto/resetPassword.dto';
+import { Otp, OtpDocument } from 'src/model/otp.schema';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name)
     private readonly userModel: Model<UserDocument>,
+    @InjectModel(Otp.name)
+    private readonly otpModel: Model<OtpDocument>,
     private readonly jwtService: JwtService,
     private readonly mailerService: MailerService,
   ) {}
@@ -308,9 +310,13 @@ export class UsersService {
     }
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    user.otp = otp;
-    user.otpExpire = new Date(Date.now() + 10 * 60 * 1000);
-    await user.save();
+    const expireTime = new Date(Date.now() + 10 * 60 * 1000);
+
+    await this.otpModel.findOneAndUpdate(
+      { email },
+      { otp, otp_expire: expireTime },
+      { upsert: true, new: true },
+    );
 
     const emailSubject = 'Forgot Password OTP';
     const emailText = `Your otp is ${otp}. Validate for 10 minutes.`;
@@ -328,8 +334,8 @@ export class UsersService {
     );
   }
 
-  async verifyOtp(dto: VerifyOtpDto) {
-    const { email, otp } = dto;
+  async resetPassword(dto: ResetPasswordDto) {
+    const { email, otp, new_password, confirm_new_password } = dto;
     const user = await this.userModel.findOne({ email });
 
     if (!user) {
@@ -341,52 +347,20 @@ export class UsersService {
       );
     }
 
-    if (user.otp !== otp) {
-      Logger.error(`Otp ${Messages.INVALID}`);
+    const otpRecord = await this.otpModel.findOne({ email });
+    if (!otpRecord || otpRecord.otp !== otp) {
       return HandleResponse(
         HttpStatus.BAD_REQUEST,
         ResponseData.ERROR,
-        `Otp ${Messages.INVALID}`,
+        `OTP ${Messages.INVALID}`,
       );
     }
 
-    if (user.otpExpire < new Date()) {
-      Logger.error(`Otp ${Messages.EXPIRED}`);
+    if (otpRecord.otp_expire < new Date()) {
       return HandleResponse(
-        HttpStatus.GONE,
+        HttpStatus.BAD_REQUEST,
         ResponseData.ERROR,
-        `Otp ${Messages.EXPIRED}`,
-      );
-    }
-
-    user.isOtpVerified = true;
-    await user.save();
-
-    return HandleResponse(
-      HttpStatus.OK,
-      ResponseData.SUCCESS,
-      `Otp ${Messages.VERIFIED_SUCCESSFULLY}`,
-    );
-  }
-
-  async resetPassword(dto: ResetPasswordDto) {
-    const { email, new_password, confirm_new_password } = dto;
-    const user = await this.userModel.findOne({ email });
-
-    if (!user) {
-      Logger.error(`User ${Messages.NOT_FOUND}`);
-      return HandleResponse(
-        HttpStatus.NOT_FOUND,
-        ResponseData.ERROR,
-        `User ${Messages.NOT_FOUND}`,
-      );
-    }
-
-    if (!user.isOtpVerified) {
-      return HandleResponse(
-        HttpStatus.FORBIDDEN,
-        ResponseData.ERROR,
-        Messages.PLEASE_VERIFY_OTP_BEFORE_RESETTING_PASSWORD,
+        `OTP ${Messages.EXPIRED}`,
       );
     }
 
@@ -400,13 +374,11 @@ export class UsersService {
 
     const hashed = await bcrypt.hash(new_password, 10);
     user.password = hashed;
-    user.otp = null;
-    user.otpExpire = null;
-    user.isOtpVerified = false;
     await user.save();
 
-    Logger.log(Messages.PASSWORD_RESET_SUCCESSFULLY);
+    await this.otpModel.deleteOne({ email });
 
+    Logger.log(Messages.PASSWORD_RESET_SUCCESSFULLY);
     return HandleResponse(
       HttpStatus.OK,
       ResponseData.SUCCESS,

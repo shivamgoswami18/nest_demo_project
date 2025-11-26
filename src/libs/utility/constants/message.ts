@@ -21,7 +21,7 @@ export enum Messages {
   CHANGED_SUCCESSFULLY = 'changed successfully.',
   SEND_SUCCESSFULLY = 'send successfully.',
   PASSWORD_RESET_SUCCESSFULLY = 'Password reset successfully.',
-  PLEASE_VERIFY_OTP_BEFORE_RESETTING_PASSWORD = 'Please verify OTP before resetting password.',
+  PLEASE_VERIFY_OTP = 'Please verify OTP before resetting password.',
   NEW_PASSWORD_AND_CONFIRM_NEW_PASSWORD_IS_NOT_SAME = 'New password and confirm new password is not same.',
 
   // Role Messages
