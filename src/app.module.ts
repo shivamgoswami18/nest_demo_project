@@ -12,6 +12,7 @@ import { ServiceModule } from './service/service.module';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './libs/service/auth/jwt.strategy';
 import { MailModule } from './libs/service/mail/mail.module';
+import { MemberModule } from './member/member.module';
 
 const mongoUri = process.env.MONGO_URI ?? '';
 
@@ -38,6 +39,7 @@ const mongoUri = process.env.MONGO_URI ?? '';
     ProductModule,
     ServiceModule,
     MailModule,
+    MemberModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtStrategy],
