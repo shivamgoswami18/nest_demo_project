@@ -6,6 +6,7 @@ import {
   Length,
   Matches,
 } from 'class-validator';
+import { Match } from 'src/libs/helpers/decorators/match.decorator';
 
 export class ResetPasswordDto {
   @ApiProperty({
@@ -52,6 +53,9 @@ export class ResetPasswordDto {
   @Matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{6,}$/, {
     message:
       'Password must be at least 6 characters long and contain at least one letter and one number.',
+  })
+  @Match('new_password', {
+    message: 'New Password and Confirm Password do not match',
   })
   confirm_new_password: string;
 }

@@ -364,14 +364,6 @@ export class UsersService {
       );
     }
 
-    if (new_password !== confirm_new_password) {
-      return HandleResponse(
-        HttpStatus.BAD_REQUEST,
-        ResponseData.ERROR,
-        Messages.NEW_PASSWORD_AND_CONFIRM_NEW_PASSWORD_IS_NOT_SAME,
-      );
-    }
-
     const hashed = await bcrypt.hash(new_password, 10);
     user.password = hashed;
     await user.save();
