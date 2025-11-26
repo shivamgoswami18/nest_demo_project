@@ -10,12 +10,19 @@ export enum Messages {
   DELETED_SUCCESSFULLY = 'deleted successfully.',
   FILE_UPLOADED_SUCCESSFULLY = 'File uploaded successfully.',
   ALREADY_DELETED = 'already deleted.',
+  INVALID = 'invalid.',
+  EXPIRED = 'expired.',
+  VERIFIED_SUCCESSFULLY = 'verified successfully.',
 
   // Auth Messages
   INVALID_CREDENTIALS = 'Invalid credentials.',
   LOGIN_SUCCESSFULLY = 'Logged in successfully.',
   INCORRECT = 'is incorrect.',
   CHANGED_SUCCESSFULLY = 'changed successfully.',
+  SEND_SUCCESSFULLY = 'send successfully.',
+  PASSWORD_RESET_SUCCESSFULLY = 'Password reset successfully.',
+  PLEASE_VERIFY_OTP_BEFORE_RESETTING_PASSWORD = 'Please verify OTP before resetting password.',
+  NEW_PASSWORD_AND_CONFIRM_NEW_PASSWORD_IS_NOT_SAME = 'New password and confirm new password is not same.',
 
   // Role Messages
   USER_ROLE_NOT_FOUND = 'User role not found.',

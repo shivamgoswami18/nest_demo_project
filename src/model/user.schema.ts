@@ -22,6 +22,25 @@ export class User {
 
   @Prop({
     type: String,
+    required: false,
+  })
+  otp: string;
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  otpExpire: Date;
+
+  @Prop({
+    type: Boolean,
+    default: false,
+    required: false,
+  })
+  isOtpVerified: boolean;
+
+  @Prop({
+    type: String,
     required: true,
   })
   password: string;
