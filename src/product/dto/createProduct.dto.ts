@@ -142,14 +142,6 @@ export class CreateProductDto {
 
   @ApiProperty({
     type: [ProductImageDto],
-    example: [
-      {
-        overview_image: 'image_1',
-        service_image: 'image_2',
-        right_sidebar_image_1: 'image_3',
-        right_sidebar_image_2: 'image_4',
-      },
-    ],
     required: true,
   })
   @IsArray()

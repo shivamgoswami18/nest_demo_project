@@ -2,18 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsArray, IsOptional, IsString, ValidateNested } from 'class-validator';
 
-class UpdateProductBenefitDto {
-  @ApiProperty({
-    example: 'Improves productivity',
-    type: 'string',
-    required: false,
-  })
-  @IsString()
-  @IsOptional()
-  product_benefit?: string;
-}
-
-class UpdateProductImageDto {
+class ServiceImageDto {
   @ApiProperty({
     example: 'image_1',
     type: 'string',
@@ -51,134 +40,150 @@ class UpdateProductImageDto {
   right_sidebar_image_2?: string;
 }
 
-class UpdateProductServiceDetailDto {
+class SubServiceDto {
   @ApiProperty({
-    example: 'Track carbon emissions',
+    example: 'Custom Website Development',
+    type: 'string',
     required: false,
   })
   @IsString()
   @IsOptional()
-  product_service_detail?: string;
+  sub_service_title?: string;
+
+  @ApiProperty({
+    example:
+      'We specialize in creating custom websites that are aligned with your business goals',
+    type: 'string',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  sub_service_description?: string;
 }
 
-class UpdateProductServiceDto {
+class ServiceApproachDto {
   @ApiProperty({
-    example: 'Record Your Impact',
+    example: 'We start every project',
+    type: 'string',
     required: false,
   })
   @IsString()
   @IsOptional()
-  product_service_type?: string;
-
-  @ApiProperty({
-    type: [UpdateProductServiceDetailDto],
-    required: false,
-  })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => UpdateProductServiceDetailDto)
-  @IsOptional()
-  product_service_details?: UpdateProductServiceDetailDto[];
+  services_details_point?: string;
 }
 
-class UpdateProductExpertiseDto {
+class ServiceBenefitDto {
   @ApiProperty({
-    example: 'Environmental Data Tracking',
+    example: 'A website or application',
     type: 'string',
     required: false,
   })
   @IsString()
   @IsOptional()
-  expertise_area?: string;
-
-  @ApiProperty({
-    example: 'Track emissions, energy usage',
-    type: 'string',
-    required: false,
-  })
-  @IsString()
-  @IsOptional()
-  expertise_description?: string;
+  services_details_point?: string;
 }
 
-class UpdateProductMethodologyDto {
+class ServiceAtcDto {
   @ApiProperty({
-    example: 'Assess current environmental impact and sustainability goals.',
+    example: 'At the heart of our web development services',
     type: 'string',
     required: false,
   })
   @IsString()
   @IsOptional()
-  methodology_description?: string;
+  services_details_point?: string;
 }
 
-export class UpdateProductDto {
+class ServiceConsultingDto {
   @ApiProperty({
-    example: 'laptop',
+    example: 'software-development',
     type: 'string',
     required: false,
   })
   @IsString()
   @IsOptional()
-  product_name?: string;
+  services_details_point?: string;
 
   @ApiProperty({
-    example: 'we can make websites',
+    example: 'Innovate, Build, and Grow. Cuentista Tech offers',
     type: 'string',
     required: false,
   })
   @IsString()
   @IsOptional()
-  product_description?: string;
+  services_details_description?: string;
+}
 
+export class UpdateServiceDto {
   @ApiProperty({
-    type: [UpdateProductBenefitDto],
-    example: [
-      { product_benefit: 'Improves productivity' },
-      { product_benefit: 'Learn new things' },
-    ],
+    example: 'Web Development',
+    type: 'string',
     required: false,
   })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => UpdateProductBenefitDto)
-  product_benefits?: UpdateProductBenefitDto[];
-
-  @ApiProperty({
-    type: [UpdateProductImageDto],
-    required: false,
-  })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => UpdateProductImageDto)
-  product_images?: UpdateProductImageDto[];
-
-  @ApiProperty({
-    type: [UpdateProductServiceDto],
-    required: false,
-  })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => UpdateProductServiceDto)
+  @IsString()
   @IsOptional()
-  product_services?: UpdateProductServiceDto[];
+  service_name?: string;
 
   @ApiProperty({
-    type: [UpdateProductExpertiseDto],
+    example: 'Empowering Your Online Presence',
+    type: 'string',
     required: false,
   })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => UpdateProductExpertiseDto)
+  @IsString()
   @IsOptional()
-  product_expertise?: UpdateProductExpertiseDto[];
+  service_description?: string;
 
   @ApiProperty({
-    type: [UpdateProductMethodologyDto],
+    type: [ServiceImageDto],
     required: false,
   })
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => UpdateProductMethodologyDto)
-  product_methodology?: UpdateProductMethodologyDto[];
+  @Type(() => ServiceImageDto)
+  service_images?: ServiceImageDto[];
+
+  @ApiProperty({
+    type: [SubServiceDto],
+    required: false,
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => SubServiceDto)
+  sub_service?: SubServiceDto[];
+
+  @ApiProperty({
+    type: [ServiceApproachDto],
+    required: false,
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ServiceApproachDto)
+  approaches?: ServiceApproachDto[];
+
+  @ApiProperty({
+    type: [ServiceBenefitDto],
+    required: false,
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ServiceBenefitDto)
+  benefits?: ServiceBenefitDto[];
+
+  @ApiProperty({
+    type: [ServiceAtcDto],
+    required: false,
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ServiceAtcDto)
+  atc?: ServiceAtcDto[];
+
+  @ApiProperty({
+    type: [ServiceConsultingDto],
+    required: false,
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ServiceConsultingDto)
+  consulting?: ServiceConsultingDto[];
 }
