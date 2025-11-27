@@ -12,12 +12,18 @@ import { UserPaginationDto } from './dto/userPagination.dto';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ChangePasswordDto } from './dto/changePassword.dto';
+import { VerifyEmailDto } from './dto/verifyEmail.dto';
+import { ResetPasswordDto } from './dto/resetPassword.dto';
+import { Otp, OtpDocument } from 'src/model/otp.schema';
+import { mailSend } from 'src/libs/service/mail/mail';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name)
     private readonly userModel: Model<UserDocument>,
+    @InjectModel(Otp.name)
+    private readonly otpModel: Model<OtpDocument>,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -286,6 +292,88 @@ export class UsersService {
       HttpStatus.OK,
       ResponseData.SUCCESS,
       `Password ${Messages.CHANGED_SUCCESSFULLY}`,
+    );
+  }
+
+  async verifyEmail(dto: VerifyEmailDto) {
+    const { email } = dto;
+    const user = await this.userModel.findOne({ email });
+
+    if (!user) {
+      Logger.error(`User ${Messages.NOT_FOUND}`);
+      return HandleResponse(
+        HttpStatus.NOT_FOUND,
+        ResponseData.ERROR,
+        `User ${Messages.NOT_FOUND}`,
+      );
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expireTime = new Date(Date.now() + 10 * 60 * 1000);
+
+    await this.otpModel.findOneAndUpdate(
+      { email },
+      { otp, otp_expire: expireTime },
+      { upsert: true, new: true },
+    );
+
+    const emailSubject = 'Forgot Password OTP';
+    const emailText = `Your otp is ${otp}. Validate for 10 minutes.`;
+
+    await mailSend({
+      to: email,
+      subject: emailSubject,
+      text: emailText,
+    });
+
+    return HandleResponse(
+      HttpStatus.OK,
+      ResponseData.SUCCESS,
+      `Otp ${Messages.SEND_SUCCESSFULLY}`,
+    );
+  }
+
+  async resetPassword(dto: ResetPasswordDto) {
+    const { email, otp, new_password } = dto;
+    const user = await this.userModel.findOne({ email });
+
+    if (!user) {
+      Logger.error(`User ${Messages.NOT_FOUND}`);
+      return HandleResponse(
+        HttpStatus.NOT_FOUND,
+        ResponseData.ERROR,
+        `User ${Messages.NOT_FOUND}`,
+      );
+    }
+
+    const otpRecord = await this.otpModel.findOne({ email });
+    if (!otpRecord || Number(otpRecord.otp) !== Number(otp)) {
+      return HandleResponse(
+        HttpStatus.BAD_REQUEST,
+        ResponseData.ERROR,
+        `OTP ${Messages.INVALID}`,
+      );
+    }
+
+    if (otpRecord.otp_expire < new Date()) {
+      return HandleResponse(
+        HttpStatus.BAD_REQUEST,
+        ResponseData.ERROR,
+        `OTP ${Messages.EXPIRED}`,
+      );
+    }
+
+    const hashed = await bcrypt.hash(new_password, 10);
+    user.password = hashed;
+    await user.save();
+
+    await this.otpModel.deleteOne({ email });
+
+    Logger.log(Messages.PASSWORD_RESET_SUCCESSFULLY);
+    return HandleResponse(
+      HttpStatus.OK,
+      ResponseData.SUCCESS,
+      Messages.PASSWORD_RESET_SUCCESSFULLY,
     );
   }
 }

@@ -5,7 +5,6 @@ import {
   HttpStatus,
   Post,
   Get,
-  Param,
   Delete,
   UseGuards,
   Request,
@@ -22,6 +21,8 @@ import { JwtAuthGuard } from 'src/libs/service/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/libs/service/auth/roles.guard';
 import { Public } from 'src/libs/helpers/decorators/public.decorator';
 import { ChangePasswordDto } from './dto/changePassword.dto';
+import { VerifyEmailDto } from './dto/verifyEmail.dto';
+import { ResetPasswordDto } from './dto/resetPassword.dto';
 
 @ApiTags(ApiTag.USER)
 @ApiBearerAuth()
@@ -100,5 +101,25 @@ export class UsersController {
   @Post('changePassword')
   async changePassword(@Request() req: any, @Body() dto: ChangePasswordDto) {
     return await this.usersService.changePassword(req, dto);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Verify Email',
+    description: 'This api will verify the email',
+  })
+  @Post('verifyEmail')
+  async verifyEmail(@Body() dto: VerifyEmailDto) {
+    return await this.usersService.verifyEmail(dto);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Reset Password',
+    description: 'This api will reset password',
+  })
+  @Post('resetPassword')
+  async resetPassword(@Body() dto: ResetPasswordDto) {
+    return await this.usersService.resetPassword(dto);
   }
 }
