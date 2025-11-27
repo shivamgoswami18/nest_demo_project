@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   IsEmail,
   IsNotEmpty,
   IsString,
-  Length,
   Matches,
 } from 'class-validator';
 import { Match } from 'src/libs/helpers/decorators/match.decorator';
@@ -19,13 +19,13 @@ export class ResetPasswordDto {
   email: string;
 
   @ApiProperty({
-    example: '123456',
-    type: 'string',
+    example: 123456,
+    type: 'number',
     required: true,
   })
-  @IsString()
   @IsNotEmpty()
-  @Length(6, 6)
+  @Transform(({ value }) => value.toString())
+  @Matches(/^\d{6}$/, { message: 'OTP must be a 6 digit code' })
   otp: string;
 
   @ApiProperty({

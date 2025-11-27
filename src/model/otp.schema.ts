@@ -8,20 +8,19 @@ export class Otp {
   @Prop({
     type: String,
     required: true,
-    unique: true,
     trim: true,
   })
   email: string;
 
   @Prop({
-    type: String,
-    required: false,
+    type: Number,
+    required: true,
   })
-  otp: string;
+  otp: number;
 
   @Prop({
     type: Date,
-    required: false,
+    required: true,
   })
   otp_expire: Date;
 }

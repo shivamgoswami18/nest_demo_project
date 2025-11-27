@@ -13,9 +13,9 @@ import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ChangePasswordDto } from './dto/changePassword.dto';
 import { VerifyEmailDto } from './dto/verifyEmail.dto';
-import { MailerService } from '@nestjs-modules/mailer';
 import { ResetPasswordDto } from './dto/resetPassword.dto';
 import { Otp, OtpDocument } from 'src/model/otp.schema';
+import { mailSend } from 'src/libs/service/mail/mail';
 
 @Injectable()
 export class UsersService {
@@ -25,7 +25,6 @@ export class UsersService {
     @InjectModel(Otp.name)
     private readonly otpModel: Model<OtpDocument>,
     private readonly jwtService: JwtService,
-    private readonly mailerService: MailerService,
   ) {}
 
   async registration(dto: RegistrationDto) {
@@ -321,7 +320,7 @@ export class UsersService {
     const emailSubject = 'Forgot Password OTP';
     const emailText = `Your otp is ${otp}. Validate for 10 minutes.`;
 
-    await this.mailerService.sendMail({
+    await mailSend({
       to: email,
       subject: emailSubject,
       text: emailText,
@@ -335,7 +334,7 @@ export class UsersService {
   }
 
   async resetPassword(dto: ResetPasswordDto) {
-    const { email, otp, new_password, confirm_new_password } = dto;
+    const { email, otp, new_password } = dto;
     const user = await this.userModel.findOne({ email });
 
     if (!user) {
@@ -348,7 +347,7 @@ export class UsersService {
     }
 
     const otpRecord = await this.otpModel.findOne({ email });
-    if (!otpRecord || otpRecord.otp !== otp) {
+    if (!otpRecord || Number(otpRecord.otp) !== Number(otp)) {
       return HandleResponse(
         HttpStatus.BAD_REQUEST,
         ResponseData.ERROR,
