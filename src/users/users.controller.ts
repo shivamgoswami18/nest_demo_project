@@ -22,7 +22,6 @@ import { RolesGuard } from 'src/libs/service/auth/roles.guard';
 import { Public } from 'src/libs/helpers/decorators/public.decorator';
 import { ChangePasswordDto } from './dto/changePassword.dto';
 import { VerifyEmailDto } from './dto/verifyEmail.dto';
-import { VerifyOtpDto } from './dto/VerifyOtp.dto';
 import { ResetPasswordDto } from './dto/resetPassword.dto';
 
 @ApiTags(ApiTag.USER)
@@ -112,16 +111,6 @@ export class UsersController {
   @Post('verifyEmail')
   async verifyEmail(@Body() dto: VerifyEmailDto) {
     return await this.usersService.verifyEmail(dto);
-  }
-
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Verify OTP',
-    description: 'This api will verify the otp',
-  })
-  @Post('verifyOtp')
-  async verifyOtp(@Body() dto: VerifyOtpDto) {
-    return await this.usersService.verifyOtp(dto);
   }
 
   @HttpCode(HttpStatus.OK)
